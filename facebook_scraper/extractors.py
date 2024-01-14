@@ -523,7 +523,7 @@ class PostExtractor:
                 else:
                     path = f'{account}/videos/{video_post_id}'
 
-        post_id = self.extract_post_id()
+        post_id = self.extract_post_id()['post_id']
 
         if video_post_match is None and account is not None and post_id is not None:
             path = f'{account}/posts/{post_id}'
