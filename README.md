@@ -23,13 +23,13 @@ pip install facebook-scraper
 Or, to install this latest master branch:
 
 ```sh
-pip install git+https://github.com/moda20/facebook-scraper.git@master
+pip install git+https://github.com/maor121/facebook-scraper.git@master
 ```
 
 Or, to force update the branch after an update : 
 
 ```sh
-pip install --force-reinstall --no-deps git+https://github.com/moda20/facebook-scraper.git@master
+pip install --force-reinstall --no-deps git+https://github.com/maor121/facebook-scraper.git@master
 ```
 
 And to add it to your requirements.txt manually : 

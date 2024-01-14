@@ -99,6 +99,7 @@ class PostExtractor:
         self.options = options
         self.request = request_fn
 
+        self._data_store = None
         self._data_ft = None
         self._full_post_html = full_post_html
         self._live_data = {}
@@ -266,6 +267,7 @@ class PostExtractor:
         return {
             'post_id': self.live_data.get("ft_ent_identifier")
                        or self.data_ft.get('top_level_post_id')
+                       or self.data_store.get('feedback_target')
                        or self.element.find('[id^="like_"]', first=True).attrs.get('id').split('like_')[
                            1] if self.element.find('[id^="like_"]', first=True) else None
         }
@@ -1428,6 +1430,22 @@ class PostExtractor:
                 for link in links:
                     people.append({"name": link.text, "link": link.attrs["href"]})
             return {"with": people, "header": self.element.find("header h3", first=True).text}
+
+    @property
+    def data_store(self) -> dict:
+        if self._data_store is not None:
+            return self._data_store
+
+        self._data_store = {}
+        try:
+            data_store_json = self.element.attrs['data-store'].replace("\\\\", "\\")
+            self._data_store = demjson.decode(data_store_json)
+        except JSONDecodeError as ex:
+            logger.error("Error parsing data-ft JSON: %r", ex)
+        except KeyError:
+            logger.error("data-ft attribute not found")
+
+        return self._data_store
 
     @property
     def data_ft(self) -> dict:
