@@ -265,11 +265,7 @@ class PostExtractor:
         # post id (top_level_post_id) found in data-fn is not usable anymore since data-fn is now practically empty;
         # we can use an id on the like button to get that
         return {
-            'post_id': self.live_data.get("ft_ent_identifier")
-                       or self.data_ft.get('top_level_post_id')
-                       or self.data_store.get('feedback_target')
-                       or self.element.find('[id^="like_"]', first=True).attrs.get('id').split('like_')[
-                           1] if self.element.find('[id^="like_"]', first=True) else None
+            'post_id': self.data_store.get('feedback_target')
         }
 
     def extract_username(self) -> PartialPost:
@@ -527,7 +523,7 @@ class PostExtractor:
                 else:
                     path = f'{account}/videos/{video_post_id}'
 
-        post_id = self.data_ft.get('top_level_post_id')
+        post_id = self.extract_post_id()
 
         if video_post_match is None and account is not None and post_id is not None:
             path = f'{account}/posts/{post_id}'
