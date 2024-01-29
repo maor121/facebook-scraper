@@ -92,7 +92,8 @@ class PostExtractor:
     post_story_regex = re.compile(r'href="(\/story[^"]+)" aria')
 
     # selectors
-    post_more_button_selector = 'a:contains("More")[href^="/story.php"]'
+    #post_more_button_selector = 'a:contains("More")[href^="/story.php"]'
+    post_more_button_selector = "span[data-sigil='more']>a"
 
     def __init__(self, element, options, request_fn, full_post_html=None, extra_info=None, **kwargs):
         self.element = element
