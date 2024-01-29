@@ -357,9 +357,11 @@ class PostExtractor:
                                 texts['is_truncated_text'] = "true"
                                 texts['full_post_url'] = utils.urljoin(FB_MBASIC_BASE_URL, more_button[0].attrs['href'])
 
-                                more_link_html = node.find(self.post_more_link_selector)[0].html
+                            # remove more links
+                            more_links = node.find(self.post_more_link_selector)
+                            if len(more_links) > 0:
                                 node = utils.make_html_element(
-                                    html=node.html.replace(more_link_html, '', 1)
+                                    html=node.html.replace(more_links[0].html, '', 1)
                                 )
 
                         if not ended:
