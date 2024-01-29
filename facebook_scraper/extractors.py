@@ -94,6 +94,7 @@ class PostExtractor:
     # selectors
     #post_more_button_selector = 'a:contains("More")[href^="/story.php"]'
     post_more_button_selector = "span[data-sigil='more']>a"
+    post_more_link_selector = 'span[class="text_exposed_hide"]'
 
     def __init__(self, element, options, request_fn, full_post_html=None, extra_info=None, **kwargs):
         self.element = element
@@ -355,8 +356,9 @@ class PostExtractor:
                                 )
                                 texts['is_truncated_text'] = "true"
                                 texts['full_post_url'] = utils.urljoin(FB_MBASIC_BASE_URL, more_button[0].attrs['href'])
+                            more_link_html = node.find(self.post_more_link_selector)[0].html
                             node = utils.make_html_element(
-                                html=node.html.replace('>… <', '><', 1).replace('>More<', '', 1)
+                                html=node.html.replace(more_link_html, '', 1)
                             )
 
                         if not ended:
