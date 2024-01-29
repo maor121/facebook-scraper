@@ -301,7 +301,7 @@ class PostExtractor:
                         f"found a 'more' button, will send the minimal text notice"
                     )
                     returned_text['is_truncated_text'] = "true"
-                    returned_text['full_post_url'] = utils.urljoin(FB_MBASIC_BASE_URL, more_button[0].attrs('href'))
+                    returned_text['full_post_url'] = utils.urljoin(FB_MBASIC_BASE_URL, more_button[0].attrs['href'])
                 text = self.full_post_html.find("div.msg", first=True).text
                 returned_text['text'] = text
                 returned_text['post_text'] = text
@@ -354,7 +354,7 @@ class PostExtractor:
                                     f"found a 'more' button, will send the minimal text notice"
                                 )
                                 texts['is_truncated_text'] = "true"
-                                texts['full_post_url'] = utils.urljoin(FB_MBASIC_BASE_URL, more_button[0].attrs('href'))
+                                texts['full_post_url'] = utils.urljoin(FB_MBASIC_BASE_URL, more_button[0].attrs['href'])
                             node = utils.make_html_element(
                                 html=node.html.replace('>… <', '><', 1).replace('>More<', '', 1)
                             )
