@@ -379,7 +379,8 @@ class PostExtractor:
                         texts['full_post_url'] = utils.urljoin(FB_MBASIC_BASE_URL, more_button[0].attrs.get('href'))
                         logger.debug(f"getting the text from the full page post : {texts['full_post_url']}")
                         post_urls = [texts['full_post_url']]
-                        post = next(self.scraper.get_posts_by_url(post_urls=post_urls))
+                        post = next(self.scraper.get_posts_by_url(post_urls=post_urls,
+                                                                  options=self.options))
                         logger.debug(f"got the text from the full page post")
                         texts['full_text'] = post['text']
 
