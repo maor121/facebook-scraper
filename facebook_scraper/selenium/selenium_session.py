@@ -1,10 +1,12 @@
 """
 Imitate requests_html.HTMLSession with selinium
 """
+from requests import HTTPError
 from requests_html import HTMLResponse, HTML
 from selenium import webdriver
+from selenium.webdriver.common.by import By
 
-from facebook_scraper.selenium.extension import proxies
+from facebook_scraper.selenium.extension import proxies, http_status_extension
 
 
 class SeleniumSession:
@@ -12,6 +14,8 @@ class SeleniumSession:
         chrome_options = webdriver.ChromeOptions()
         proxies_extension = proxies(proxy_username, proxy_password, endpoint, proxy_port)
         chrome_options.add_extension(proxies_extension)
+        http_status_ext = http_status_extension()
+        chrome_options.add_extension(http_status_ext)
         # chrome_options.add_argument("--headless=new")
 
         self.driver = webdriver.Chrome(options=chrome_options)
@@ -71,4 +75,28 @@ class HTMLResponse:
         return self._html
 
     def raise_for_status(self):
-        self.session.driver.h
+        http_status_code = self.session.driver.get_cookie("status-code")
+
+        if http_status_code != 200:
+            http_error_msg = ''
+            reason = self.session.driver.find_element(By.cssSelector("#mainContent~h1")).isDisplayed();
+
+            if isinstance(reason, bytes):
+                # We attempt to decode utf-8 first because some servers
+                # choose to localize their reason strings. If the string
+                # isn't utf-8, we fall back to iso-8859-1 for all other
+                # encodings. (See PR #3538)
+                try:
+                    reason = reason.decode('utf-8')
+                except UnicodeDecodeError:
+                    reason = reason.decode('iso-8859-1')
+
+            if 400 <= http_status_code < 500:
+                http_error_msg = u'%s Client Error: %s for url: %s' % (http_status_code, reason, self.url)
+
+            elif 500 <= http_status_code < 600:
+                http_error_msg = u'%s Server Error: %s for url: %s' % (http_status_code, reason, self.url)
+
+            if http_error_msg:
+                raise HTTPError(http_error_msg, response=self)
+
