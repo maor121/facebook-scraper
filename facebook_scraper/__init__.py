@@ -17,7 +17,7 @@ from .utils import html_element_to_string, parse_cookie_file
 from . import exceptions
 import traceback
 import time
-from datetime import datetime, timedelta
+import datetime
 import re
 import os
 
@@ -416,7 +416,7 @@ def write_posts_to_csv(
     sleep = kwargs.pop("sleep", 0)
 
     days_limit = kwargs.get("days_limit", 3650)
-    max_post_time = datetime.now() - timedelta(days=days_limit)
+    max_post_time = datetime.datetime.now() - datetime.timedelta(days=days_limit)
 
     start_url = None
     resume_file = kwargs.get("resume_file")

@@ -5,6 +5,12 @@ import pytest
 from facebook_scraper import *
 
 
+@pytest.fixture()
+def setup_method():
+    """called once before any test"""
+    facebook_scraper.set_proxy("PROXY_URL")     # SET PROXY HERE
+
+
 @pytest.mark.vcr()
 class TestGetPosts:
     def test_get_posts(self):

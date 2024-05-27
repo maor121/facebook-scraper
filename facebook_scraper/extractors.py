@@ -4,7 +4,7 @@ import demjson3 as demjson
 from demjson3 import JSONDecodeError
 import logging
 import re
-from datetime import datetime
+import datetime
 from typing import Any, Dict, Optional
 from urllib.parse import parse_qs, urlparse
 from tqdm.auto import tqdm
@@ -420,16 +420,16 @@ class PostExtractor:
             try:
                 timestamp = page['post_context']['publish_time']
                 logger.debug(
-                    f"Got exact timestamp from publish_time: {datetime.fromtimestamp(timestamp)}"
+                    f"Got exact timestamp from publish_time: {datetime.datetime.fromtimestamp(timestamp)}"
                 )
-                return {'time': datetime.fromtimestamp(timestamp), 'timestamp': timestamp}
+                return {'time': datetime.datetime.fromtimestamp(timestamp), 'timestamp': timestamp}
             except (KeyError, ValueError):
                 continue
 
         # Try to extract from the abbr element
         date_element = self.element.find('abbr', first=True)
         if date_element is not None:
-            date = utils.parse_datetime(date_element.text, search=False)
+            date = utils.parse_datetime.datetime(date_element.text, search=False)
             if date:
                 return {'time': date}
             logger.debug("Could not parse date: %s", date_element.text)
@@ -437,7 +437,7 @@ class PostExtractor:
             logger.warning("Could not find the abbr element for the date")
 
         # Try to look in the entire text
-        date = utils.parse_datetime(self.element.text)
+        date = utils.parse_datetime.datetime(self.element.text)
         if date:
             return {'time': date}
 
@@ -445,9 +445,9 @@ class PostExtractor:
             date_element = self.full_post_html.find("abbr[data-store*='time']", first=True)
             time = json.loads(date_element.attrs["data-store"])["time"]
             logger.debug(
-                f"Got exact timestamp from abbr[data-store]: {datetime.fromtimestamp(time)}"
+                f"Got exact timestamp from abbr[data-store]: {datetime.datetime.fromtimestamp(time)}"
             )
-            return {'time': datetime.fromtimestamp(time), 'timestamp': time}
+            return {'time': datetime.datetime.fromtimestamp(time), 'timestamp': time}
         except:
             return None
 
@@ -945,7 +945,7 @@ class PostExtractor:
                 'reactions': reactions,
                 'reaction_count': reaction_count,
                 'reactors': reactors,
-                'fetched_time': datetime.now(),
+                'fetched_time': datetime.datetime.now(),
                 'w3_fb_url': w3_fb_url,
             }
 
@@ -965,9 +965,9 @@ class PostExtractor:
                         },
                         'comments': data['comment_count']['total_count'],
                         'w3_fb_url': data['url'],
-                        'fetched_time': datetime.now(),
+                        'fetched_time': datetime.datetime.now(),
                     }
-        return {'fetched_time': datetime.now()}
+        return {'fetched_time': datetime.datetime.now()}
 
     def extract_video(self):
         video_data_element = self.element.find('[data-sigil="inlineVideo"]', first=True)
@@ -1061,7 +1061,7 @@ class PostExtractor:
         if meta.get("contentSize"):
             contentSize = float(meta['contentSize'].strip("kB")) / 1000
 
-        time = utils.parse_datetime(meta["datePublished"])
+        time = utils.parse_datetime.datetime(meta["datePublished"])
         # Remove the timezone attribute to make it timezone-naive
         time = time.astimezone().replace(tzinfo=None)
         return {
@@ -1159,7 +1159,7 @@ class PostExtractor:
         # Try to extract from the abbr element
         date_element = comment.find('abbr', first=True)
         if date_element:
-            date = utils.parse_datetime(date_element.text, search=True)
+            date = utils.parse_datetime.datetime(date_element.text, search=True)
             if not date:
                 logger.debug(f"Unable to parse {date_element.text}")
         else:
@@ -1579,5 +1579,5 @@ class StoryExtractor(PostExtractor):
     def extract_time(self) -> PartialPost:
         date_element = self.element.find("abbr[data-store*='time']", first=True)
         time = json.loads(date_element.attrs["data-store"])["time"]
-        logger.debug(f"Got exact timestamp from abbr[data-store]: {datetime.fromtimestamp(time)}")
-        return {'time': datetime.fromtimestamp(time), 'timestamp': time}
+        logger.debug(f"Got exact timestamp from abbr[data-store]: {datetime.datetime.fromtimestamp(time)}")
+        return {'time': datetime.datetime.fromtimestamp(time), 'timestamp': time}

@@ -8,7 +8,7 @@ from typing import Iterator, Union
 import json
 import demjson3 as demjson
 from urllib.parse import parse_qs, urlparse, unquote
-from datetime import datetime
+import datetime
 import os
 
 from requests import RequestException
@@ -615,7 +615,7 @@ class FacebookScraper:
                     "profile_picture": elem.find("img", first=True).attrs["src"],
                     "text": text,
                     "header": header_elem.text,
-                    "time": datetime.fromtimestamp(time),
+                    "time": datetime.datetime.fromtimestamp(time),
                     "timestamp": time,
                     "recommends": recommends,
                     "post_url": utils.urljoin(
