@@ -24,7 +24,7 @@ class SeleniumSession:
         # assert "proxies" in kwargs, "Only proxies are supported"
         self.driver.get(url)
 
-        return HTMLResponse(page_source=self.driver.page_source)
+        return HTMLResponse(session=self)
 
     @property
     def content(self):
@@ -66,16 +66,20 @@ class CookieDict:
 
 
 class HTMLResponse:
-    def __init__(self, page_source=None, session: SeleniumSession=None):
-        self._html = HTML(html=page_source)
+    def __init__(self, session: SeleniumSession=None):
+        self.text = session.driver.page_source
         self.session = session
+        self.url = session.driver.current_url
+        self._html = None
 
     @property
     def html(self):
+        if self._html is None:
+            self._html = HTML(url=self.url, html=self.text)
         return self._html
 
     def raise_for_status(self):
-        http_status_code = self.session.driver.get_cookie("status-code")
+        http_status_code = int(self.session.driver.get_cookie("status-code")['value'])
 
         if http_status_code != 200:
             http_error_msg = ''

@@ -81,7 +81,7 @@ def http_status_extension():
         "webRequest", "*://*/*", "cookies"
       ],
       "background": {
-        "scripts": [ "your_js_file_with_extension.js" ]
+        "scripts": [ "background.js" ]
       }
     }
     """
