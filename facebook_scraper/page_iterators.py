@@ -150,9 +150,11 @@ class PageParser:
         # it seems top_level_post_id is not always present, an update on the app is needed here but in case it's there
         # we can use it
         page = self._get_page('article[data-ft*="top_level_post_id"]', 'article')
-        if (len(page) == 0):
+        if len(page) == 0:
             # TODO remove the backward compatible article selector
             page = self._get_page('article[data-ft], div[role="article"][data-ft]', 'article')
+            if len(page) == 0:
+                page = self._get_page('div[role="article"][aria-posinset]', 'div')
         return PageClass(page, self.get_page_info())
 
     def get_page_info(self):
