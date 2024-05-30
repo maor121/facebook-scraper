@@ -289,7 +289,9 @@ class PostExtractor:
         story_containers = element.find(".story_body_container")
         # on the single post page of mbasic .story_body_container doesn't seem to exist which means no text will be extracted
         if len(story_containers) == 0:
-            story_containers = [element.find("[data-ft]", first=True)]
+            story_containers = list(filter(lambda x: x, [element.find("[data-ft]", first=True)]))
+            if len(story_containers) == 0:
+                story_containers = [e for e in element.find('div[@class]') if 'html-div' in e.attrs['class']]
 
         has_more = self.more_url_regex.search(element.html)
         if has_more and self.full_post_html:
