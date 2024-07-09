@@ -5,6 +5,7 @@ from requests import HTTPError
 from requests_html import HTMLResponse, HTML
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+from webdriver_manager.chrome import ChromeDriverManager
 
 from facebook_scraper.selenium.extension import proxies, http_status_extension
 
@@ -35,7 +36,9 @@ class SeleniumSession:
 
         chrome_options.add_experimental_option("mobileEmulation", mobile_emulation)
 
-        self.driver = webdriver.Chrome(options=chrome_options)
+        self.driver = webdriver.Chrome(
+            ChromeDriverManager().install(),
+            options=chrome_options)
 
     def get(self, url, **kwargs):
         # assert "proxies" in kwargs, "Only proxies are supported"
