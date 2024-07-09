@@ -11,13 +11,16 @@ from facebook_scraper.selenium.extension import proxies, http_status_extension
 
 
 class SeleniumSession:
-    def __init__(self, proxy_username, proxy_password, endpoint, proxy_port):
+    def __init__(self, proxy_username, proxy_password, endpoint, proxy_port, browser_args={}):
         chrome_options = webdriver.ChromeOptions()
         proxies_extension = proxies(proxy_username, proxy_password, endpoint, proxy_port)
         chrome_options.add_extension(proxies_extension)
         http_status_ext = http_status_extension()
         chrome_options.add_extension(http_status_ext)
         # chrome_options.add_argument("--headless=new")
+
+        for arg in browser_args:
+            chrome_options.add_argument(arg)
 
         mobile_emulation = {
             "deviceMetrics": {"width": 360, "height": 640, "pixelRatio": 3.0},
