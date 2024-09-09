@@ -1,6 +1,7 @@
 """
 Imitate requests_html.HTMLSession with selinium
 """
+import glob
 import os
 
 from requests import HTTPError
@@ -41,8 +42,12 @@ class SeleniumSession:
 
         chrome_options.add_experimental_option("mobileEmulation", mobile_emulation)
 
+        chrome_driver_dir = os.path.split(ChromeDriverManager().install())[0]
+        # find driver, both linux & windows
+        chrome_driver_exec_path = glob.glob(os.path.join(chrome_driver_dir, "chromedriver*"))[0]
+
         self.driver = webdriver.Chrome(
-            executable_path=os.path.join(ChromeDriverManager().install(), "../chromedriver.exe"),
+            executable_path=chrome_driver_exec_path,
             options=chrome_options)
 
     def get(self, url, **kwargs):
