@@ -1,0 +1,17 @@
+wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+sudo apt install ./google-chrome-stable_current_amd64.deb
+sudo apt-get install xvfb
+
+python
+from webdriver_manager.chrome import ChromeDriverManager
+ChromeDriverManager().install()
+# See dir path of printed file
+
+sudo chmod +x PATH_TO_DIR/chromedriver
+
+# Start fake X server
+# https://stackoverflow.com/questions/35562860/start-x-server-on-google-cloud-debian-compute-engine
+Xvfb :1 & #upper case X
+export DISPLAY=:1
+startxfce4 &
+
