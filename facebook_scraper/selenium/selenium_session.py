@@ -14,7 +14,7 @@ from facebook_scraper.selenium.extension import proxies, http_status_extension
 
 
 class SeleniumSession:
-    def __init__(self, proxy_username, proxy_password, endpoint, proxy_port, browser_args={}):
+    def __init__(self, proxy_username, proxy_password, endpoint, proxy_port, browser_args={}, exp_args={}):
         chrome_options = webdriver.ChromeOptions()
         proxies_extension = proxies(proxy_username, proxy_password, endpoint, proxy_port)
         chrome_options.add_extension(proxies_extension)
@@ -41,6 +41,8 @@ class SeleniumSession:
             "userAgent": 'Mozilla/5.0 (iPad; CPU OS 16_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Mobile/15E148 Safari/604.1'}
 
         chrome_options.add_experimental_option("mobileEmulation", mobile_emulation)
+        for k, v in exp_args.items():
+            chrome_options.add_experimental_option(k, v)
 
         chrome_driver_dir = os.path.split(ChromeDriverManager().install())[0]
         # find driver, both linux & windows
